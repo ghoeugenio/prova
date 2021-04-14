@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loteria Caixa</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+    <div class="main">
+        <p class="title"><strong>NEW BET FOR </strong><span data-js="title"></span></p>
+        <p><strong>Choose a game</strong></p>
+        <div class="radio-toolbar">
+            <input data-js="radio" type="radio" id="radio1" name="radios" value="1" checked>
+            <label class="label1" for="radio1">Lotofácil</label>
+          
+            <input data-js="radio" type="radio" id="radio2" name="radios" value="2">
+            <label class="label2" for="radio2">Mega-Sena</label>
+          
+            <input data-js="radio" type="radio" id="radio3" name="radios" value="3">
+            <label class="label3" for="radio3">Quina</label>
+          </div>
+        <p><strong>Fill your bet</strong></p>
+        <p data-js="description">Description</p>
+        <div data-js="numbers" class="numbers">
+
+        </div>
+        <div class="actions" data-js="actions">
+            <button data-js="completeGame">Complete game</button>
+            <button data-js="clearGame">Clear game</button>
+            <button data-js="addToCart"><img class="icon" src="/src/assets/cart.png">Add to cart</button>
+        </div>
+    </div>
+    <div class="sidebar">
+        <div class="shop" data-js="cart">
+            <p class="titleCart"><strong>CART</strong></p>
+        </div>
+        <p class="price"><strong>CART </strong>TOTAL: R$ <span data-js="totalPrice"></span></p>
+        <button data-js="saveCart">Save<img src="/src/assets/arrow.png"></button>
+    </div>
+    <script src="./src/dom.js"></script>
+    <script src="./src/index.js"></script>
+</body>
+</html>

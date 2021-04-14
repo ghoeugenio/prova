@@ -1,0 +1,203 @@
+@font-face {
+    font-family: "Helvetica";
+    src: url('/src/font/Helvetica.ttf');
+}
+
+@font-face {
+    font-family: "Helvetica-Bold";
+    src: url('/src/font/Helvetica-Bold.ttf');
+}
+
+body{
+    font-family: 'Helvetica-Bold';
+    color: #707070;
+    display: flex;
+}
+
+.main {
+    width: 70%;
+}
+
+.title{
+    font-family: 'Helvetica';
+    font-size: 24px;
+}
+
+.radio-toolbar input[type="radio"] {
+    display: none;
+}
+
+.radio-toolbar label {
+    display: inline-block;
+    padding: 8px 28px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 20px;
+    margin-right: 25px;
+}
+
+.radio-toolbar input[id="radio1"]:checked+label {
+    background-color:#7F3992;
+    color: #fff;
+}
+
+.radio-toolbar input[id="radio2"]:checked+label {
+    background-color:#01AC66;
+    color: #fff;
+}
+
+.radio-toolbar input[id="radio3"]:checked+label {
+    background-color:#F79C31;
+    color: #fff;
+}
+
+.label1 {
+    background-color: #fff;
+    border: 2px solid #7F3992;
+    color: #7F3992;
+}
+
+.label2 {
+    background-color: #fff;
+    border: 2px solid #01AC66;
+    color: #01AC66;
+}
+
+.label3 {
+    background-color: #fff;
+    border: 2px solid #F79C31;
+    color: #F79C31;
+}
+
+.numbers {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+}
+
+.numbers input[type="checkbox"] {
+    display: none;
+}
+
+.numbers label{
+    display: inline-block;
+    padding: 26px 26px;
+    width: 14px;
+    height: 14px;
+    font-size: 16px;
+    cursor: default;
+    border-radius: 50%;
+    background-color: #ADC0C4;
+    vertical-align: middle;
+    justify-content: center;
+    color: #fff;
+    margin: 12px;
+}
+
+.numbers input[type="checkbox"]:checked+label {
+    background-color: #32dc32;
+}
+
+.actions{
+    margin-top: 30px;   
+}
+
+.actions button{
+    font-family: 'Helvetica-Bold';
+    width: 135px;
+    height: 52px;
+    border: 1px solid #27C383;
+    color: #27C383;
+    background-color: #fff;
+    border-radius: 10px;
+    outline: none;
+}
+
+.actions button:last-child{
+    background-color: #27C383;
+    color: #fff;
+    margin-left: 368px;
+    width: 209px;
+}
+
+.actions button:last-child img{
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    align-items: center;
+}
+
+.actions button:first-child{
+   margin-right: 25px;
+   width: 164px;
+}
+
+.total{
+    font-family: 'Helvetica';
+}
+
+.sidebar {
+    float: right;
+    width: 30%;
+    height: 50%;
+    background-color: #fff;
+    border: 1px solid #E2E2E2;
+    border-radius: 10px;
+    opacity: 1;
+}
+
+.titleCart{
+    margin-left: 19px;
+    font-size: 24px;
+}
+
+.sidebar button:last-child{
+    width: 100%;
+    height: 96px;
+    background-color: #fafafa;
+    color: #27C383;
+    border: 1px solid #E2E2E2;
+    font-size: 35px;
+    outline: none;
+}
+
+.sidebar button img{
+    margin-left: 18px;
+    width: 24px;
+    height: 24px;
+}
+
+.shop div{
+    display: flex;
+    margin-bottom: 32px;
+    height: 92px;
+    font-family: 'Helvetica';
+}
+
+.shop button {
+    background-color: transparent;
+    border: none;
+    align-items: center;
+    outline: none;
+}
+
+.shop button img{
+    width: 20px;
+    height: 20px;
+}
+
+.textCart {
+    height: 80%;
+    padding-left: 4px;
+}
+
+.typeGameCart {
+    float: left;
+    width: 50%;
+    max-width: 100px;
+    font-family: 'Helvetica-Bold';
+}
+
+.price {
+    padding-left: 4px;
+    font-family: 'Helvetica';
+}
