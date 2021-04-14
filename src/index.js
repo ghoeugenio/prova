@@ -82,6 +82,11 @@
 
             doAleatoryBet: function doAleatoryBet(){
                 var listCheck = $('[data-js="checkbox"]').get();
+                var aux = Array.prototype.findIndex.call(listCheck, function(item){
+                    return item.checked;
+                });
+                if(aux !== -1)
+                    return alert('Números já completados!');
                 var size = gameRules.types[app.selectGame()]["max-number"];
                 var arrayRepeat = [];
                 var valueAleatory = 0;
@@ -98,6 +103,11 @@
 
             clearNumbers: function clearNumbers(){
                 var listCheck = $('[data-js="checkbox"]').get();
+                var aux = Array.prototype.findIndex.call(listCheck, function(item){
+                    return item.checked;
+                });
+                if(aux === -1)
+                    return alert('Nenhum número selecionado!');
                 for(var j = 0; j < listCheck.length; j++)
                     listCheck[j].checked = false;
             },
@@ -105,7 +115,7 @@
             addToCart: function addToCart(){
                 var array = app.selectNumbers();
                 if(array.length === 0)
-                    return alert('Nenhum numero selecionado!');
+                    return alert('Faça alguma aposta!');
                 app.clearNumbers();
                 var numbersForCart = array.toString().replace(/\D+[,]/g, '');
                 app.showInCart(numbersForCart);
