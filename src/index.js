@@ -1,4 +1,4 @@
-(function($, window, doc){
+(function($, win, doc){
     "use strict";
 
     var app = (function(){
@@ -28,7 +28,7 @@
                 $completeGame.on('click', app.doAleatoryBet);
                 $clearGame.on('click', app.clearNumbers);
                 $addToCart.on('click', app.addToCart);
-                $priceCart[0].textContent = totalPrice;
+                app.showPrice(0);
                 $saveCart.on('click', app.saveCart);
             },
 
@@ -129,7 +129,6 @@
                 number.setAttribute('id', 'checkbox' + i);
                 number.setAttribute('name', 'checkboxs');
                 number.setAttribute('value', i);
-                number.setAttribute('disabled', true);
                 return number;
             },
 
@@ -141,24 +140,24 @@
             },
 
             doAleatoryBet: function doAleatoryBet(){
-                var listCheck = $('[data-js="checkbox"]').get();
-                var aux = Array.prototype.findIndex.call(listCheck, function(item){
-                    return item.checked;
+                var listCheck = $('[data-js="checkbox"]').get();                
+                var sizeOfGameType = gameRules.types[app.selectGame()]["max-number"];
+                var arrayOfSelectNumbers = Array.prototype.filter.call(listCheck, function(item){
+                    if(item.checked)
+                        return item;
                 });
-                if(aux !== -1)
-                    return alert('Números já completados!');
-                var size = gameRules.types[app.selectGame()]["max-number"];
-                var arrayRepeat = [];
+                if(arrayOfSelectNumbers.length >= sizeOfGameType)
+                    return win.alert('Números já completados!');
                 var valueAleatory = 0;
                 var j = 0;
-                while(j < size){
+                while(j < (sizeOfGameType - arrayOfSelectNumbers.length)){
                     valueAleatory = Math.floor(Math.random() * listCheck.length);
-                    if(!(arrayRepeat.some(function(item){return item === valueAleatory}))){
-                        arrayRepeat.push(valueAleatory);
+                    if(listCheck[valueAleatory].checked === false){
                         listCheck[valueAleatory].checked = true;
                         j++;
                     }
-                }   
+                }
+                     
             },
 
             clearNumbers: function clearNumbers(){
@@ -167,20 +166,36 @@
                     return item.checked;
                 });
                 if(aux === -1)
-                    return alert('Nenhum número selecionado!');
+                    return win.alert('Nenhum número selecionado!');
                 for(var j = 0; j < listCheck.length; j++)
                     listCheck[j].checked = false;
             },
 
             addToCart: function addToCart(){
                 var array = app.selectNumbers();
-                if(array.length === 0)
-                    return alert('Faça alguma aposta!');
+                var index = app.selectGame();
+                var currentNumbers = gameRules.types[index]["max-number"] - array.length;
+                if(currentNumbers < 0){
+                    return win.alert('O jogo ' + gameRules.types[index].type +
+                    ' só permite assinalar ' + gameRules.types[index]["max-number"] +
+                    ' números...\nRemova ' + Math.abs(currentNumbers) +
+                    (Math.abs(currentNumbers) === 1 ? ' número!':' números!'));
+                }
+                if(array.length < gameRules.types[index]["max-number"]){
+                    var option = win.confirm(
+                    (Math.abs(currentNumbers) === 1 ? 'Falta ' + (Math.abs(currentNumbers)) + ' número.':
+                    'Faltam ' + (Math.abs(currentNumbers)) + ' números.') + 
+                    '...\nDeseja completar automaticamente?');
+                    if(option){
+                        return app.doAleatoryBet();
+                    }
+                    return;   
+                }
                 app.clearNumbers();
                 var numbersForCart = array.toString().replace(/\D+[,]/g, '');
+                app.showPrice((gameRules.types[index].price));
                 app.showInCart(numbersForCart);
-                totalPrice += gameRules.types[app.selectGame()].price;
-                $priceCart[0].textContent = totalPrice;
+                
             },
 
             selectNumbers: function selectNumbers(){
@@ -208,9 +223,9 @@
                 button.setAttribute('value', gameRules.types[app.selectGame()].price);
                 img.setAttribute('src', '../src/assets/trash.png');
                 button.appendChild(img);
+                button.style.borderRight = "3px solid " + gameRules.types[app.selectGame()].color;
                 button.addEventListener('click', function(){
-                    totalPrice -= +button.value;
-                    $priceCart[0].textContent = totalPrice;
+                    app.showPrice((-1 * +button.value));
                     $cart[0].removeChild(button.parentNode);
                 })
                 return button;
@@ -220,13 +235,18 @@
                 var textDiv = doc.createElement('div');
                 var numbers = doc.createElement('p');
                 var price = doc.createElement('p');
+                var typeAndPrice = doc.createElement('div');
+                var cartTypeGame = app.cartTypeGame();
                 textDiv.setAttribute('class', 'textCart');
-                textDiv.style.borderLeft = "3px solid " + gameRules.types[app.selectGame()].color;
+                textDiv.style.display = 'inline-block';
                 numbers.textContent = numbersForCart;
-                price.textContent = 'R$ ' + gameRules.types[app.selectGame()].price;
-                numbers.appendChild(app.cartTypeGame());
-                numbers.appendChild(price);
+                price.textContent = 'R$ ' + gameRules.types[app.selectGame()].price.toFixed(2);
+                price.style.color = '#707070';
+                price.style.fontFamily = 'Helvetica';
+                typeAndPrice.appendChild(cartTypeGame);
+                typeAndPrice.appendChild(price);
                 textDiv.appendChild(numbers);
+                textDiv.appendChild(typeAndPrice);
                 return textDiv;
             },
 
@@ -240,12 +260,30 @@
 
             saveCart: function saveCart(){
                 if(totalPrice === 0)
-                    return alert('Carrinho vazio! Faça sua aposta.');
+                    return win.alert('Carrinho vazio! Faça sua aposta.');
                 $cart[0].innerHTML = null;
-                totalPrice = 0;
-                $priceCart[0].textContent = totalPrice;
-                alert('Aposta feita com sucesso, boa sorte!');
+                app.showPrice((-1 * totalPrice));
+                win.alert('Aposta feita com sucesso, boa sorte!');
                 //api.post
+            },
+
+            showPrice: function showPrice(value){
+                totalPrice += value;
+                $priceCart[0].textContent = totalPrice.toFixed(2);
+                if(totalPrice === 0)
+                    app.showCartEmpty();
+                else if($('[data-js="empty"]').get()[0])
+                    $cart[0].innerHTML = null;
+            },
+
+            showCartEmpty: function showCartEmpty(){
+                var empty = doc.createElement('div');
+                var textEmpty = doc.createElement('p')
+                empty.setAttribute('class', 'empty');
+                empty.setAttribute('data-js', 'empty');
+                textEmpty.textContent = 'EMPTY';
+                empty.appendChild(textEmpty);
+                $cart[0].appendChild(empty);
             }
         }
     })();

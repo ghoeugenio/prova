@@ -8,6 +8,11 @@
     src: url('/src/font/Helvetica-Bold.ttf');
 }
 
+html {
+    overflow: -moz-scrollbars-vertical; 
+    overflow-y: scroll;
+}
+
 body{
     font-family: 'Helvetica-Bold';
     color: #707070;
@@ -51,7 +56,7 @@ body{
     width: 14px;
     height: 14px;
     font-size: 16px;
-    cursor: default;
+    cursor: pointer;
     border-radius: 50%;
     background-color: #ADC0C4;
     vertical-align: middle;
@@ -135,9 +140,20 @@ body{
 
 .shop div{
     display: flex;
-    margin-bottom: 32px;
+    margin-bottom: 16px;
     height: 92px;
     font-family: 'Helvetica';
+    box-shadow:  inset 0 0 1em #E2E2E2;
+    width: 100%;
+}
+
+.shop div div{
+    display: flex;
+    margin-bottom: 0 0;
+    height: 20px;
+    font-family: 'Helvetica';
+    box-shadow: none;
+    width: 100%;
 }
 
 .shop button {
@@ -153,18 +169,29 @@ body{
 }
 
 .textCart {
-    height: 80%;
     padding-left: 4px;
 }
 
 .typeGameCart {
-    float: left;
-    width: 50%;
-    max-width: 100px;
+    float: left;  
     font-family: 'Helvetica-Bold';
+    width: 30%;
 }
 
 .price {
     padding-left: 4px;
     font-family: 'Helvetica';
+}
+
+.empty {
+    justify-content: center;
+    height: 30%;
+    display: flex;
+    align-items: center;
+    box-shadow:  inset 0 0 1em #E2E2E2;
+}
+
+.empty p{
+    font-family: 'Helvetica-Bold';
+    font-size: 24px;
 }
