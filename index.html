@@ -9,16 +9,9 @@
     <div class="main">
         <p class="title"><strong>NEW BET FOR </strong><span data-js="title"></span></p>
         <p><strong>Choose a game</strong></p>
-        <div class="radio-toolbar">
-            <input data-js="radio" type="radio" id="radio1" name="radios" value="1" checked>
-            <label class="label1" for="radio1">Lotofácil</label>
-          
-            <input data-js="radio" type="radio" id="radio2" name="radios" value="2">
-            <label class="label2" for="radio2">Mega-Sena</label>
-          
-            <input data-js="radio" type="radio" id="radio3" name="radios" value="3">
-            <label class="label3" for="radio3">Quina</label>
-          </div>
+        <div data-js="buttonsSelectGame" class="radio-toolbar">
+
+        </div>
         <p><strong>Fill your bet</strong></p>
         <p data-js="description">Description</p>
         <div data-js="numbers" class="numbers">
@@ -31,8 +24,9 @@
         </div>
     </div>
     <div class="sidebar">
+        <p class="titleCart"><strong>CART</strong></p>
         <div class="shop" data-js="cart">
-            <p class="titleCart"><strong>CART</strong></p>
+            
         </div>
         <p class="price"><strong>CART </strong>TOTAL: R$ <span data-js="totalPrice"></span></p>
         <button data-js="saveCart">Save<img src="/src/assets/arrow.png"></button>

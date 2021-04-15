@@ -4,13 +4,15 @@
     var app = (function(){
 
         var rules = new XMLHttpRequest();
-        var $typeRule = $('[data-js="radio"]');
-        var $numbers = $('[data-js=numbers]').get();
+        var $buttonsSelectGame = $('[data-js="buttonsSelectGame"]').get();
+        var $typeRule = [];
+        var $numbers = $('[data-js="numbers"]').get();
         var $completeGame = $('[data-js="completeGame"]');
         var $clearGame = $('[data-js="clearGame"]');
         var $addToCart = $('[data-js="addToCart"]');
         var $saveCart = $('[data-js="saveCart"]');
         var $cart = $('[data-js="cart"]').get();
+        var $priceCart = $('[data-js="totalPrice"]').get();
         var totalPrice = 0;
         var gameRules = [];
 
@@ -23,23 +25,81 @@
             },
 
             initEvents: function initEvents(){
-                $typeRule.on('click', app.showGameSelect);
                 $completeGame.on('click', app.doAleatoryBet);
                 $clearGame.on('click', app.clearNumbers);
                 $addToCart.on('click', app.addToCart);
-                $('[data-js="totalPrice"]').get()[0].textContent = totalPrice;
+                $priceCart[0].textContent = totalPrice;
                 $saveCart.on('click', app.saveCart);
+            },
+
+            setButtonGameType: function setButtonGameType(){
+                for(var i = 0; i < gameRules.types.length; i++){
+                    $buttonsSelectGame[0].appendChild(app.createInput(i));
+                    $buttonsSelectGame[0].appendChild(app.createLabel(i));
+                }
+                app.setTypeRule();
+            },
+
+            setTypeRule: function setTypeRule(){
+                $typeRule = $('[data-js="radio"]').get();
+            },
+
+            createInput: function createInput(i){
+                var input = doc.createElement('input');
+                input.setAttribute('data-js', 'radio');
+                input.setAttribute('type', 'radio');
+                input.setAttribute('id', 'radio' + i);
+                input.setAttribute('name', 'radios');
+                input.setAttribute('value', i);
+                if(i === 0){
+                    input.setAttribute('checked', 'true');  
+                }  
+                input.addEventListener('click', function(){
+                    app.loadGame();
+                });
+                input.addEventListener('change', function(){
+                    var buttonActive = doc.getElementById('label' + i);
+                    var label = doc.getElementsByName('label');
+                    for(var j = 0; j < gameRules.types.length; j++){
+                        label[j].style.backgroundColor = '#fff';
+                        label[j].style.color = gameRules.types[j].color;
+                    }
+                    buttonActive.style.backgroundColor = gameRules.types[i].color;
+                    buttonActive.style.color = '#fff';                    
+                });
+                return input;
+            },
+
+            createLabel: function createLabel(i){
+                var label = doc.createElement('label');
+                label.setAttribute('id', 'label' + i);
+                label.setAttribute('for', 'radio' + i);
+                label.setAttribute('name', 'label');
+                label.style.backgroundColor = '#fff';
+                label.style.border = '2px solid ' + gameRules.types[i].color;
+                label.style.color = gameRules.types[i].color;
+                label.textContent = gameRules.types[i].type;
+                if(i === 0){
+                    label.style.backgroundColor = gameRules.types[i].color;
+                    label.style.color = '#fff'; 
+                }
+                return label;
             },
 
             showGameSelect: function showGameSelect(){
                 if(rules.readyState === XMLHttpRequest.DONE)
                      if(rules.status === 200)
-                        gameRules = JSON.parse(rules.responseText);
+                        app.setGameRules();
+            },
+
+            setGameRules: function setGameRules(){
+                gameRules = JSON.parse(rules.responseText);
+                app.setButtonGameType();
                 app.loadGame();
             },
 
             selectGame: function selectGame(){
-                return Array.prototype.findIndex.call($typeRule.get(), function(item){
+                return Array.prototype.findIndex.call($typeRule, function(item){
                     return item.checked;
                 });
             },
@@ -120,7 +180,7 @@
                 var numbersForCart = array.toString().replace(/\D+[,]/g, '');
                 app.showInCart(numbersForCart);
                 totalPrice += gameRules.types[app.selectGame()].price;
-                $('[data-js="totalPrice"]').get()[0].textContent = totalPrice;
+                $priceCart[0].textContent = totalPrice;
             },
 
             selectNumbers: function selectNumbers(){
@@ -149,25 +209,25 @@
                 img.setAttribute('src', '../src/assets/trash.png');
                 button.appendChild(img);
                 button.addEventListener('click', function(){
-                    $cart[0].removeChild(button.parentNode);
                     totalPrice -= +button.value;
-                    $('[data-js="totalPrice"]').get()[0].textContent = totalPrice;
+                    $priceCart[0].textContent = totalPrice;
+                    $cart[0].removeChild(button.parentNode);
                 })
                 return button;
             },
 
             textCart: function textCart(numbersForCart){
-                var text = doc.createElement('div');
+                var textDiv = doc.createElement('div');
                 var numbers = doc.createElement('p');
                 var price = doc.createElement('p');
-                text.setAttribute('class', 'textCart');
-                text.style.borderLeft = "3px solid " + gameRules.types[app.selectGame()].color;
+                textDiv.setAttribute('class', 'textCart');
+                textDiv.style.borderLeft = "3px solid " + gameRules.types[app.selectGame()].color;
                 numbers.textContent = numbersForCart;
                 price.textContent = 'R$ ' + gameRules.types[app.selectGame()].price;
                 numbers.appendChild(app.cartTypeGame());
                 numbers.appendChild(price);
-                text.appendChild(numbers);
-                return text;
+                textDiv.appendChild(numbers);
+                return textDiv;
             },
 
             cartTypeGame: function cartTypeGame(){
@@ -183,7 +243,7 @@
                     return alert('Carrinho vazio! Faça sua aposta.');
                 $cart[0].innerHTML = null;
                 totalPrice = 0;
-                $('[data-js="totalPrice"]').get()[0].textContent = totalPrice;
+                $priceCart[0].textContent = totalPrice;
                 alert('Aposta feita com sucesso, boa sorte!');
                 //api.post
             }
