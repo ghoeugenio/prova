@@ -6,6 +6,7 @@
         var rules = new XMLHttpRequest();
         var $buttonsSelectGame = $('[data-js="buttonsSelectGame"]').get();
         var $typeRule = [];
+        var currentGame = {};
         var $numbers = $('[data-js="numbers"]').get();
         var $completeGame = $('[data-js="completeGame"]');
         var $clearGame = $('[data-js="clearGame"]');
@@ -99,21 +100,22 @@
             },
 
             selectGame: function selectGame(){
-                return Array.prototype.findIndex.call($typeRule, function(item){
+                var index = Array.prototype.findIndex.call($typeRule, function(item){
                     return item.checked;
                 });
+                currentGame = gameRules.types[index];
             },
 
             loadGame: function loadGame(){
                 var index = app.selectGame();
-                $('[data-js="title"]').get()[0].textContent = gameRules.types[index].type.toUpperCase();
-                $('[data-js="description"]').get()[0].textContent = gameRules.types[index].description;
+                $('[data-js="title"]').get()[0].textContent = currentGame.type.toUpperCase();
+                $('[data-js="description"]').get()[0].textContent = currentGame.description;
                 app.listNumbers(index);
             },
 
             listNumbers: function listNumbers(index){
                 $numbers[0].innerHTML = null;
-                var size = gameRules.types[index].range;
+                var size = currentGame.range;
                 for(var i = 1; i <= size; i++){
                     var number = app.doNumber(i);
                     var label = app.doLabel(i);
@@ -141,7 +143,7 @@
 
             doAleatoryBet: function doAleatoryBet(){
                 var listCheck = $('[data-js="checkbox"]').get();                
-                var sizeOfGameType = gameRules.types[app.selectGame()]["max-number"];
+                var sizeOfGameType = currentGame["max-number"];
                 var arrayOfSelectNumbers = Array.prototype.filter.call(listCheck, function(item){
                     if(item.checked)
                         return item;
@@ -157,7 +159,6 @@
                         j++;
                     }
                 }
-                     
             },
 
             clearNumbers: function clearNumbers(){
@@ -174,14 +175,14 @@
             addToCart: function addToCart(){
                 var array = app.selectNumbers();
                 var index = app.selectGame();
-                var currentNumbers = gameRules.types[index]["max-number"] - array.length;
+                var currentNumbers = currentGame["max-number"] - array.length;
                 if(currentNumbers < 0){
-                    return win.alert('O jogo ' + gameRules.types[index].type +
-                    ' só permite assinalar ' + gameRules.types[index]["max-number"] +
+                    return win.alert('O jogo ' + currentGame.type +
+                    ' só permite assinalar ' + currentGame["max-number"] +
                     ' números...\nRemova ' + Math.abs(currentNumbers) +
                     (Math.abs(currentNumbers) === 1 ? ' número!':' números!'));
                 }
-                if(array.length < gameRules.types[index]["max-number"]){
+                if(array.length < currentGame["max-number"]){
                     var option = win.confirm(
                     (Math.abs(currentNumbers) === 1 ? 'Falta ' + (Math.abs(currentNumbers)) + ' número.':
                     'Faltam ' + (Math.abs(currentNumbers)) + ' números.') + 
@@ -193,9 +194,8 @@
                 }
                 app.clearNumbers();
                 var numbersForCart = array.toString().replace(/\D+[,]/g, '');
-                app.showPrice((gameRules.types[index].price));
+                app.showPrice((currentGame.price));
                 app.showInCart(numbersForCart);
-                
             },
 
             selectNumbers: function selectNumbers(){
@@ -220,10 +220,10 @@
             buttonCart: function buttonCart(){
                 var button = doc.createElement('button');
                 var img = doc.createElement('img');
-                button.setAttribute('value', gameRules.types[app.selectGame()].price);
+                button.setAttribute('value', currentGame.price);
                 img.setAttribute('src', '../src/assets/trash.png');
                 button.appendChild(img);
-                button.style.borderRight = "3px solid " + gameRules.types[app.selectGame()].color;
+                button.style.borderRight = "3px solid " + currentGame.color;
                 button.addEventListener('click', function(){
                     app.showPrice((-1 * +button.value));
                     $cart[0].removeChild(button.parentNode);
@@ -240,7 +240,7 @@
                 textDiv.setAttribute('class', 'textCart');
                 textDiv.style.display = 'inline-block';
                 numbers.textContent = numbersForCart;
-                price.textContent = 'R$ ' + gameRules.types[app.selectGame()].price.toFixed(2);
+                price.textContent = 'R$ ' + currentGame.price.toFixed(2).toString().replace(/[.]/, ','); 
                 price.style.color = '#707070';
                 price.style.fontFamily = 'Helvetica';
                 typeAndPrice.appendChild(cartTypeGame);
@@ -252,8 +252,8 @@
 
             cartTypeGame: function cartTypeGame(){
                 var typeGame = doc.createElement('p');
-                typeGame.textContent = gameRules.types[app.selectGame()].type;
-                typeGame.style.color = gameRules.types[app.selectGame()].color;
+                typeGame.textContent = currentGame.type;
+                typeGame.style.color = currentGame.color;
                 typeGame.setAttribute('class', 'typeGameCart');
                 return typeGame;
             },
@@ -269,7 +269,7 @@
 
             showPrice: function showPrice(value){
                 totalPrice += value;
-                $priceCart[0].textContent = totalPrice.toFixed(2);
+                $priceCart[0].textContent = totalPrice.toFixed(2).toString().replace(/[.]/, ','); 
                 if(totalPrice === 0)
                     app.showCartEmpty();
                 else if($('[data-js="empty"]').get()[0])

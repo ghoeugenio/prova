@@ -51,15 +51,14 @@ body{
 }
 
 .numbers label{
-    display: inline-block;
-    padding: 26px 26px;
-    width: 14px;
-    height: 14px;
+    text-align: center;
+    width: 65px;
+    padding-top: 22px;
+    height: 43px;
     font-size: 16px;
     cursor: pointer;
     border-radius: 50%;
     background-color: #ADC0C4;
-    vertical-align: middle;
     justify-content: center;
     color: #fff;
     margin: 12px;
